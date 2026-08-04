@@ -61,11 +61,13 @@
           else resolve(value);
         }
 
-        subscription = node.on(value => {
+        const chain = node.on(value => {
           let accepted = false;
           try { accepted = predicate(value); } catch (_) {}
           if (accepted) finish(null, value);
         });
+        subscription = chain;
+        if (finished && chain && typeof chain.off === 'function') chain.off();
       });
     }
 
